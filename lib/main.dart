@@ -1,8 +1,10 @@
 import 'dart:ffi';
 
+import 'package:anjayclub/Cell/CategoryCell.dart';
 import 'package:anjayclub/Cell/HeadlineCell.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 
 void main() {
   runApp(MyApp());
@@ -13,7 +15,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> litems = ["1","2","Third","4"];
+    List<String> litems = ["1", "2", "Third", "4"];
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -34,15 +36,10 @@ class MyApp extends StatelessWidget {
         // closer together (more dense) than on mobile platforms.
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      
       home: MyHomePage(title: 'Flutter Demo Home Page'),
-     
     );
-
   }
 }
-
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -56,20 +53,13 @@ class MyHomePage extends StatefulWidget {
   // used by the build method of the State. Fields in a Widget subclass are
   // always marked "final".
 
-
   final String title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
-
 }
 
-
-
-
-
 class _MyHomePageState extends State<MyHomePage> {
-
   // int _counter = 0;
   //
   // void _incrementCounter() {
@@ -83,10 +73,15 @@ class _MyHomePageState extends State<MyHomePage> {
   //   });
   // }
 
-
   @override
   Widget build(BuildContext context) {
-    List<String> litems = ["1","2","Third","4"];
+    List<String> litems = ["https://www.woke.id/wp-content/uploads/2020/09/Suzy-Nam-Joo-Hyuk-732x487.jpg",
+      "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQMBCIgc8ymzGMRKVc70MhbNZYLXx5eHo9TVQ&usqp=CAU",
+      "https://cdn-2.tstatic.net/tribunnews/foto/bank/images/one-piece-tv-anime-one-piece-wanokuni.jpg",
+      "https://www.kdramalove.com/LoveAlarmKoreanDramaHeadert.jpg"];
+
+
+    List<String>category = ["Anime","Drama Korea","TV Series","Cartoon"];
     // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
@@ -103,45 +98,104 @@ class _MyHomePageState extends State<MyHomePage> {
       body: ListView(
         children: [
           Container(
+              margin: EdgeInsets.all(10),
+              child: Column(
+                verticalDirection: VerticalDirection.down,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: HeadlineCell.headline(context),
+              )),
+          Container(
+              height: 100,
+              child: Column(
+                verticalDirection: VerticalDirection.down,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: CategoryCell.category(category),
+              )),
+          Container(
+            margin: EdgeInsets.only(top: 20),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    SizedBox(width: 10),
+                    Text(
+                      "POPULAR",
+                      style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ],
+                ),
+                CarouselSlider(
+                  options: CarouselOptions(
+                      height: 200,
+                      autoPlay:true,
+                      autoPlayCurve: Curves.fastLinearToSlowEaseIn),
+                  items: litems.map((i) {
 
-            margin: EdgeInsets.all(10),
-            child:Column(
-              verticalDirection: VerticalDirection.down,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: HeadlineCell.headline(context),
-            )
-          ),
-        Container(
-          height: 100,
-          child: new ListView.builder (
-            scrollDirection: Axis.horizontal,
-    itemCount: litems.length,
-    itemBuilder: (BuildContext context,int index) {
-      return new Card(
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            SizedBox(width: 20,),
-            Icon(Icons.access_alarm,),
-            SizedBox(width: 5,),
-            Text(
-              "ANIME",
-              style: TextStyle(
-                fontSize: 17,
-                color: Colors.white,
-                fontStyle: FontStyle.normal,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.left,
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            // decoration: BoxDecoration(
+                            //     color: Colors.amber
+                            // ),
+                            child:  Container(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    SizedBox(
+                                      height: 10,
+                                    ),
+                                    Row(
+                                      children: [
+                                        ClipRRect(
+                                            borderRadius: BorderRadius.circular(8.0),
+                                            child: Stack(children: [
+                                              Image.network(
+                                                "$i",
+                                                height: 150,
+                                                fit: BoxFit.cover,
+                                                width: MediaQuery.of(context).size.width - 100,
+                                              ),
+                                              Container(
+                                                height: 150,
+                                                width: MediaQuery.of(context).size.width -100,
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    gradient: LinearGradient(
+                                                        begin: FractionalOffset.topCenter,
+                                                        end: FractionalOffset.bottomCenter,
+                                                        colors: [
+                                                          Colors.grey.withOpacity(0.0),
+                                                          Colors.black,
+                                                        ],
+                                                        stops: [
+                                                          0.0,
+                                                          1.0
+                                                        ])),
+                                              ),
+                                            ])
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                )
+                            )
+                        );
+                      },
+                    );
+
+                  }).toList(),
+                ),
+
+              ],
             ),
-            SizedBox(width: 20,),
-          ],
-        ),
-      );
-    }
           ),
-        ),
         ],
       ),
       floatingActionButton: FloatingActionButton(

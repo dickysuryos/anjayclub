@@ -28,7 +28,7 @@ class HeadlineCell {
           borderRadius: BorderRadius.circular(8.0),
           child: Stack(children: [
             Image.network(
-              "https://github.com/atornel/RestaurantAppUIKit/raw/master/ss/res.png",
+              "https://www.woke.id/wp-content/uploads/2020/09/Suzy-Nam-Joo-Hyuk-732x487.jpg",
               height: 230,
               fit: BoxFit.cover,
               width: MediaQuery.of(context).size.width,
@@ -53,7 +53,7 @@ class HeadlineCell {
           ])),
       SizedBox(height: 7),
       Text(
-        "OnePiece",
+        "Start-Up",
         style: TextStyle(
           fontSize: 17,
           color: Colors.white,

@@ -1,10 +1,12 @@
 import 'dart:ffi';
 
+import 'package:anjayclub/model/Drama.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CategoryCell{
-      static List category(List data){
+      static List<Widget> category(List<Drama> data){
+        print("ini data ${data}");
         List<Widget> category = List<Widget>();
         category = [
           SizedBox(height: 20,),
@@ -28,7 +30,7 @@ class CategoryCell{
               height: 50,
               child: new ListView.builder (
                   scrollDirection: Axis.horizontal,
-                  itemCount: data.length,
+                  itemCount: 1,
                   itemBuilder: (BuildContext context,int index) {
                     return new Card(
                       shadowColor: Colors.black12,
@@ -40,7 +42,7 @@ class CategoryCell{
                           Icon(Icons.video_collection,color: Colors.red[100*index]),
                           SizedBox(width: 5,),
                           Text(
-                            data[index],
+                            data[index].title,
                             style: TextStyle(
                               fontSize: 17,
                               color: Colors.white,

@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:anjayclub/model/Drama.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -7,7 +8,7 @@ class HeadlineCell {
   BuildContext context;
 
 
-  static List headline(BuildContext context) {
+  static List headline(BuildContext context,List<Drama> data) {
     List<Widget> headline = List<Widget>();
     headline = [
       Text(
@@ -28,7 +29,7 @@ class HeadlineCell {
           borderRadius: BorderRadius.circular(8.0),
           child: Stack(children: [
             Image.network(
-              "https://www.woke.id/wp-content/uploads/2020/09/Suzy-Nam-Joo-Hyuk-732x487.jpg",
+              data[0].image,
               height: 230,
               fit: BoxFit.cover,
               width: MediaQuery.of(context).size.width,

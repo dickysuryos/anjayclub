@@ -1,7 +1,10 @@
 import 'dart:ffi';
 
+import 'package:anjayclub/API/ApiRequest.dart';
 import 'package:anjayclub/Cell/CategoryCell.dart';
 import 'package:anjayclub/Cell/HeadlineCell.dart';
+import 'package:anjayclub/DetailArticle.dart';
+import 'package:anjayclub/model/Drama.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -15,7 +18,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<String> litems = ["1", "2", "Third", "4"];
+
+
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
@@ -40,6 +44,27 @@ class MyApp extends StatelessWidget {
     );
   }
 }
+
+
+List fetchData()  {
+  List result;
+     FutureBuilder<List<Drama>>(
+        future: ApiRequest.shared(),
+        builder: (context,snapshot){
+          if (snapshot.hasData){
+            List<Drama> data = snapshot.data;
+            print("data ga kosong");
+        result = data;
+          }else if (snapshot.error != null){
+            print("data ini kosong");
+            return Text("${snapshot.error}");
+          }
+          return CircularProgressIndicator();
+        }
+    );
+     return result;
+  }
+
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -75,14 +100,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> litems = ["https://www.woke.id/wp-content/uploads/2020/09/Suzy-Nam-Joo-Hyuk-732x487.jpg",
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQMBCIgc8ymzGMRKVc70MhbNZYLXx5eHo9TVQ&usqp=CAU",
-      "https://cdn-2.tstatic.net/tribunnews/foto/bank/images/one-piece-tv-anime-one-piece-wanokuni.jpg",
-      "https://www.kdramalove.com/LoveAlarmKoreanDramaHeadert.jpg"];
+   List<Drama> items = fetchData() ;
+   List<String>category = ["Anime","Drama Korea","TV Series","Cartoon"];
 
 
-    List<String>category = ["Anime","Drama Korea","TV Series","Cartoon"];
-    // This method is rerun every time setState is called, for instance as done
+       // This method is rerun every time setState is called, for instance as done
     // by the _incrementCounter method above.
     //
     // The Flutter framework has been optimized to make rerunning build methods
@@ -91,112 +113,126 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black54,
+
         // Here we take the value from the MyHomePage object that was created by
         // the App.build method, and use it to set our appbar title.
         title: Text(widget.title),
       ),
-      body: ListView(
-        children: [
-          Container(
-              margin: EdgeInsets.all(10),
-              child: Column(
-                verticalDirection: VerticalDirection.down,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: HeadlineCell.headline(context),
-              )),
-          Container(
-              height: 100,
-              child: Column(
-                verticalDirection: VerticalDirection.down,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: CategoryCell.category(category),
-              )),
-          Container(
-            margin: EdgeInsets.only(top: 20),
-            child: Column(
+      body: FutureBuilder<List<Drama>>(
+        future: ApiRequest.shared(),
+        builder: (context,data) {
+          if (data.hasData != null){
+            items = data.data;
+          }
+            return Column(
               children: [
-                Row(
-                  children: [
-                    SizedBox(width: 10),
-                    Text(
-                      "POPULAR",
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
+                Container(
+                    margin: EdgeInsets.all(10),
+                    child: Column(
+                      verticalDirection: VerticalDirection.down,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: HeadlineCell.headline(context,items),
+                    )),
+                Container(
+                    height: 100,
+                    child: Column(
+                      verticalDirection: VerticalDirection.down,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: CategoryCell.category(items),
+                    )),
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  child: Column(
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(width: 10),
+                          Text(
+                            "POPULAR",
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                CarouselSlider(
-                  options: CarouselOptions(
-                      height: 200,
-                      autoPlay:true,
-                      autoPlayCurve: Curves.fastLinearToSlowEaseIn),
-                  items: litems.map((i) {
+                      CarouselSlider(
 
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: EdgeInsets.symmetric(horizontal: 5.0),
-                            // decoration: BoxDecoration(
-                            //     color: Colors.amber
-                            // ),
-                            child:  Container(
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(
-                                      children: [
-                                        ClipRRect(
-                                            borderRadius: BorderRadius.circular(8.0),
-                                            child: Stack(children: [
-                                              Image.network(
-                                                "$i",
-                                                height: 150,
-                                                fit: BoxFit.cover,
-                                                width: MediaQuery.of(context).size.width - 100,
+                        options: CarouselOptions(
+                            height: 190,
+                            autoPlay:true,
+                            autoPlayCurve: Curves.fastLinearToSlowEaseIn),
+                        items: items.map((i) {
+
+                          return Builder(
+                            builder: (BuildContext context) {
+                              return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  child: InkWell(
+                                      onTap: (){
+                                        Navigator.push(context, MaterialPageRoute(builder: (context) => DetailArticle(drama: i.urlVideo)));
+                                      },
+                                      child:
+                                  Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          SizedBox(
+                                            height: 10,
+                                          ),
+                                          Row(
+                                            children: [
+                                              ClipRRect(
+                                                  borderRadius: BorderRadius.circular(8.0),
+                                                  child: Stack(children: [
+                                                    Image.network(
+                                                      i.image,
+                                                      height: 150,
+                                                      fit: BoxFit.cover,
+                                                      width: MediaQuery.of(context).size.width - 100,
+                                                    ),
+                                                    Container(
+                                                      height: 150,
+                                                      width: MediaQuery.of(context).size.width -100,
+                                                      decoration: BoxDecoration(
+                                                          color: Colors.white,
+                                                          gradient: LinearGradient(
+                                                              begin: FractionalOffset.topCenter,
+                                                              end: FractionalOffset.bottomCenter,
+                                                              colors: [
+                                                                Colors.grey.withOpacity(0.0),
+                                                                Colors.black,
+                                                              ],
+                                                              stops: [
+                                                                0.0,
+                                                                1.0
+                                                              ])),
+                                                    ),
+                                                  ])
+
                                               ),
-                                              Container(
-                                                height: 150,
-                                                width: MediaQuery.of(context).size.width -100,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    gradient: LinearGradient(
-                                                        begin: FractionalOffset.topCenter,
-                                                        end: FractionalOffset.bottomCenter,
-                                                        colors: [
-                                                          Colors.grey.withOpacity(0.0),
-                                                          Colors.black,
-                                                        ],
-                                                        stops: [
-                                                          0.0,
-                                                          1.0
-                                                        ])),
-                                              ),
-                                            ])
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                )
-                            )
-                        );
-                      },
-                    );
+                                            ],
+                                          ),
+                                        ],
+                                      )
+                              )
+                              );
+                            },
+                          );
 
-                  }).toList(),
+                        }).toList(),
+                      ),
+
+                    ],
+                  ),
                 ),
-
               ],
-            ),
-          ),
-        ],
+            );
+
+        }
+
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: null,
